@@ -28,7 +28,7 @@ export default function Navbar() {
         }
     };
     return (
-        <nav className="flex items-center justify-between px-8 py-6 backdrop-blur-xl bg-white/5 border-b border-white/10 sticky top-0 z-50">
+        <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 py-6 bg-slate-950/60 backdrop-blur-2xl border-b border-white/10">
 
             <div>
                 <h1 className="text-3xl font-bold tracking-wide">
@@ -38,10 +38,10 @@ export default function Navbar() {
 
             {/* Desktop Menu */}
             <div className="hidden md:flex gap-8 text-sm text-gray-300">
-                <Link to="/">Home</Link>
-                <Link to="/">About</Link>
-                <Link to="/">Dashboard</Link>
-                <Link to="/">Contact</Link>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#contact">Contact</a>
             </div>
 
             {/* Desktop Button */}
@@ -83,10 +83,10 @@ export default function Navbar() {
             {menuOpen && (
                 <div className="absolute top-24 left-0 w-full backdrop-blur-2xl bg-slate-900/95 border-b border-white/10 flex flex-col items-center gap-6 py-8 md:hidden">
 
-                    <Link to="/">Features</Link>
-                    <Link to="/">About</Link>
-                    <Link to="/">Dashboard</Link>
-                    <Link to="/">Contact</Link>
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#contact">Contact</a>
 
                     <Link
                         to="/login"

@@ -1,4 +1,4 @@
-export default function Dashboard() {
+export default function DashboardPreview() {
     return (
         <section className="px-8 md:px-16 py-24 flex flex-col lg:flex-row gap-10 items-center">
 

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Signup() {
@@ -11,17 +12,30 @@ export default function Signup() {
         e.preventDefault();
 
         try {
-            await createUserWithEmailAndPassword(
-                auth,
-                email,
-                password
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+            const user = userCredential.user;
+
+            await setDoc(
+                doc(db, "users", user.uid),
+                {
+                    email: user.email,
+                    xp: 0,
+                    streak: 0,
+                    badges: 0,
+                }
             );
 
             alert("Account Created Successfully!");
 
             setEmail("");
             setPassword("");
-            navigate("/");
+            navigate("/dashboard");
         } catch (error) {
             alert(error.message);
         }

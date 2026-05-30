@@ -4,18 +4,31 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
-import Dashboard from "./components/Dashboard";
+import AboutDyslexia from "./components/AboutDyslexia";
+import WhyDyslexAid from "./components/WhyDyslexAid";
+import HowItWorks from "./components/HowItWorks";
+import DashboardPreview from "./components/DashboardPreview";
+import ImpactStats from "./components/ImpactStats";
 import Footer from "./components/Footer";
-
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Practice from "./pages/Practice";
 import Login from "./pages/Login";
+import Assessment from "./pages/Assessment";
+import LetterRecognition from "./pages/LetterRecognition";
+import WordMatching from "./pages/WordMatching";
 
 function Home() {
   return (
     <>
       <Navbar />
       <Hero />
+      <AboutDyslexia />
+      <WhyDyslexAid />
+      <HowItWorks />
       <Features />
-      <Dashboard />
+      <DashboardPreview />
+      <ImpactStats />
       <Footer />
     </>
   );
@@ -31,9 +44,26 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/practice" element={<Practice />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/assessment" element={<Assessment />} />
+        <Route
+          path="/letter-recognition"
+          element={<LetterRecognition />}
+        />
+        <Route
+          path="/word-matching"
+          element={<WordMatching />}
+        />
       </Routes>
     </div>
   );

@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 export default function Hero() {
+    const navigate = useNavigate();
     return (
-        <motion.section
+        <motion.section id="home"
             initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
@@ -29,11 +31,19 @@ export default function Hero() {
 
                 <div className="flex flex-wrap gap-4">
 
-                    <button className="px-7 py-4 rounded-2xl bg-cyan-400 text-black font-semibold hover:scale-105 transition duration-300 shadow-2xl shadow-cyan-500/30">
+                    <button
+                        onClick={() => navigate("/signup")}
+                        className="px-7 py-4 rounded-2xl bg-cyan-400 text-black font-semibold hover:scale-105 transition duration-300 shadow-2xl shadow-cyan-500/30"
+                    >
                         Start Screening
                     </button>
 
-                    <button className="px-7 py-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg hover:bg-white/20 transition duration-300">
+                    <button
+                        onClick={() => {
+                            alert("Demo Video Coming Soon!");
+                        }}
+                        className="px-7 py-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg hover:bg-white/20 transition duration-300"
+                    >
                         Watch Demo
                     </button>
 

@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, updateDoc, increment } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -11,14 +12,24 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
+            const userCredential =
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+            const user = userCredential.user;
+
+            await updateDoc(
+                doc(db, "users", user.uid),
+                {
+                    streak: increment(1)
+                }
             );
 
             alert("Login Successful!");
-            navigate("/");
+            navigate("/dashboard");
 
         } catch (error) {
             alert(error.message);
