@@ -9,7 +9,7 @@ export default function DashboardPreview() {
                         {" "}Student Dashboard
                     </span>
                 </h2>
-
+      
                 <p className="text-gray-300 text-lg leading-relaxed mb-8">
                     Teachers and parents can monitor student performance,
                     reading patterns, and AI recommendations.

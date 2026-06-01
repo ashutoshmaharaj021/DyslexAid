@@ -30,7 +30,7 @@ export default function Practice() {
             return;
         }
         try {
-            alert("Function Started");
+
 
             const user = auth.currentUser;
 

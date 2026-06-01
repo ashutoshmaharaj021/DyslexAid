@@ -3,11 +3,25 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const handleForgotPassword = async () => {
+        if (!email) {
+            alert("Please enter your email first");
+            return;
+        }
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Password reset email sent!");
+        } catch (error) {
+            alert(error.message);
+        }
+    };
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -70,6 +84,12 @@ export default function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
                     />
+                    <button
+                        type="button"
+                        onClick={handleForgotPassword}
+                    >
+                        Forgot Password?
+                    </button>
 
                     <button
                         type="submit"
