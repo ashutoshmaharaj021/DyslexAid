@@ -9,6 +9,7 @@ import WhyDyslexAid from "./components/WhyDyslexAid";
 import HowItWorks from "./components/HowItWorks";
 import DashboardPreview from "./components/DashboardPreview";
 import ImpactStats from "./components/ImpactStats";
+import AIScreening from "./pages/AIScreening";
 import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,6 +18,8 @@ import Login from "./pages/Login";
 import Assessment from "./pages/Assessment";
 import LetterRecognition from "./pages/LetterRecognition";
 import WordMatching from "./pages/WordMatching";
+import ScreeningTest from "./pages/ScreeningTest";
+import AIReport from "./pages/AIReport";
 
 function Home() {
   return (
@@ -55,14 +58,18 @@ export default function App() {
         <Route path="/practice" element={<Practice />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/ai-screening" element={<AIScreening />} />
         <Route path="/assessment" element={<Assessment />} />
         <Route
           path="/letter-recognition"
           element={<LetterRecognition />}
         />
+        <Route path="/ai-report" element={<AIReport />} />
+        <Route path="/screening-test" element={<ScreeningTest />} />
         <Route
           path="/word-matching"
           element={<WordMatching />}
+
         />
       </Routes>
     </div>

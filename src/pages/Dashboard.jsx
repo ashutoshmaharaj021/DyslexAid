@@ -121,10 +121,35 @@ export default function Dashboard() {
             </div>
 
             {/* Main Section */}
+            {/* Main Section */}
             <div className="grid lg:grid-cols-3 gap-8">
 
+                {/* AI Screening */}
+                <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
+
+                    <h2 className="text-3xl font-bold mb-4">
+                        🧠 AI Screening
+                    </h2>
+
+                    <p className="text-gray-300 mb-4">
+                        Generate your dyslexia risk report using AI.
+                    </p>
+
+                    <p className="text-cyan-300 mb-6">
+                        Status: {userData?.lastRisk ?? "Not Evaluated"}
+                    </p>
+
+                    <button
+                        onClick={() => navigate("/ai-screening")}
+                        className="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
+                    >
+                        Start Screening
+                    </button>
+
+                </div>
+
                 {/* Continue Practice */}
-                <div className="lg:col-span-2 backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
+                <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
 
                     <h2 className="text-3xl font-bold mb-4">
                         Continue Practice
@@ -143,7 +168,7 @@ export default function Dashboard() {
 
                 </div>
 
-                {/* Assessment */}
+                {/* Last Assessment */}
                 <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
 
                     <h2 className="text-2xl font-bold mb-4">
@@ -155,17 +180,23 @@ export default function Dashboard() {
                     </p>
 
                     <h3 className="text-4xl font-bold mb-6">
-                        82%
+                        {userData?.lastAccuracy ?? 0}%
                     </h3>
 
-                    <span className="px-4 py-2 rounded-full bg-yellow-500/20 border border-yellow-400/30">
-                        Moderate Risk
+                    <span className="px-4 py-2 rounded-full bg-cyan-500/20 border border-cyan-400/20">
+                        {userData?.lastRisk ?? "Not Assessed"}
                     </span>
+
+                    <p className="text-gray-400 mt-4">
+                        Last Updated:
+                        {userData?.lastAssessmentDate
+                            ? new Date(userData.lastAssessmentDate).toLocaleDateString()
+                            : "Never"}
+                    </p>
 
                 </div>
 
             </div>
-
         </div>
     );
 }
