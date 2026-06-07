@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function WordMatching() {
     const [score, setScore] = useState(0);
@@ -31,9 +32,9 @@ export default function WordMatching() {
 
         if (answer === questions[currentQuestion].correct) {
             setScore((prev) => prev + 1);
-            alert("Correct! 🎉");
+            toast.success("Correct! 🎉");
         } else {
-            alert("Wrong ❌");
+            toast.error("Wrong ❌");
         }
 
         if (currentQuestion < questions.length - 1) {

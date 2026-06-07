@@ -10,3 +10,11 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+button {
+  cursor: pointer;
+}
+
+a {
+  cursor: pointer;
+}

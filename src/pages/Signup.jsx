@@ -5,6 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Signup() {
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function Signup() {
             await setDoc(
                 doc(db, "users", user.uid),
                 {
+                    name: name,
                     email: user.email,
                     xp: 0,
                     streak: 0,
@@ -58,6 +60,13 @@ export default function Signup() {
 
                 <form onSubmit={handleSignup} className="space-y-5">
 
+                    <input
+                        type="text"
+                        placeholder="Full Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
+                    />
                     <input
                         type="email"
                         placeholder="Email Address"

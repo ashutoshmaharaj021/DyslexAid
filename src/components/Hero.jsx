@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 export default function Hero() {
     const navigate = useNavigate();
     return (
@@ -112,7 +113,16 @@ export default function Hero() {
 
                     </div>
 
-                    <button className="mt-8 w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold">
+                    <button
+                        onClick={() => {
+                            if (auth.currentUser) {
+                                navigate("/dashboard");
+                            } else {
+                                navigate("/login");
+                            }
+                        }}
+                        className="w-full py-4 mt-8 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold cursor-pointer"
+                    >
                         Generate Report
                     </button>
 

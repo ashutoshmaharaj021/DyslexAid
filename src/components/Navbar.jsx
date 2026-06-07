@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
 
@@ -22,7 +23,7 @@ export default function Navbar() {
     const handleLogout = async () => {
         try {
             await signOut(auth);
-            alert("Logged Out Successfully!");
+            toast.success("Logout Successful!");
         } catch (error) {
             console.log(error);
         }

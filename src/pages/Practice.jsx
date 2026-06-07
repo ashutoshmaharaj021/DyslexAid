@@ -56,19 +56,19 @@ export default function Practice() {
     };
     const exercises = [
         {
-            title: "Reading Exercise 1",
+            title: "Voice Reading",
             description: "Read a short paragraph and answer questions.",
             xp: 10,
             route: "/assessment"
         },
         {
-            title: "Reading Exercise 2",
+            title: "Letter Recognition",
             description: "Identify similar-looking letters and words.",
             xp: 15,
             route: "/letter-recognition"
         },
         {
-            title: "Reading Exercise 3",
+            title: "Word Matching",
             description: "Practice pronunciation and fluency.",
             xp: 20,
             route: "/word-matching"

@@ -1,13 +1,105 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Assessment() {
+    const navigate = useNavigate();
+
     const [isRecording, setIsRecording] = useState(false);
+    const [transcript, setTranscript] = useState("");
+
+    const recognitionRef = useRef(null);
+
+    const paragraph =
+        "The quick brown fox jumps over the lazy dog Reading regularly helps improve fluency comprehension and confidence Practice every day to strengthen your reading skills";
+
+    const startRecording = () => {
+
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            alert("Speech Recognition is not supported in this browser");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+
+        recognition.onresult = (event) => {
+
+            let text = "";
+
+            for (let i = 0; i < event.results.length; i++) {
+                text += event.results[i][0].transcript + " ";
+            }
+
+            setTranscript(text);
+        };
+
+        recognition.start();
+
+        recognitionRef.current = recognition;
+
+        setIsRecording(true);
+    };
+
+    const stopRecording = () => {
+
+        if (recognitionRef.current) {
+            recognitionRef.current.stop();
+        }
+
+        setIsRecording(false);
+    };
+
+    const calculateAccuracy = () => {
+
+        const originalWords =
+            paragraph.toLowerCase().split(" ");
+
+        const spokenWords =
+            transcript.toLowerCase().split(" ");
+
+        let correct = 0;
+
+        originalWords.forEach((word) => {
+
+            if (spokenWords.includes(word)) {
+                correct++;
+            }
+
+        });
+
+        return Math.round(
+            (correct / originalWords.length) * 100
+        );
+    };
+
+    const submitAssessment = () => {
+
+        const accuracy = calculateAccuracy();
+
+        const score = Math.round(
+            (accuracy / 100) * 20
+        );
+
+        navigate("/ai-report", {
+            state: {
+                score,
+                total: 20
+            }
+        });
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white p-8">
 
             <h1 className="text-5xl font-bold mb-6">
-                Reading Assessment 📖
+                Voice Reading 📖
             </h1>
 
             <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
@@ -23,17 +115,17 @@ export default function Assessment() {
                     to strengthen your reading skills.
                 </p>
 
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-wrap">
 
                     <button
-                        onClick={() => setIsRecording(true)}
+                        onClick={startRecording}
                         className="px-6 py-3 rounded-2xl bg-green-500 text-black font-bold"
                     >
                         🎤 Start Recording
                     </button>
 
                     <button
-                        onClick={() => setIsRecording(false)}
+                        onClick={stopRecording}
                         className="px-6 py-3 rounded-2xl bg-red-500 text-black font-bold"
                     >
                         ⏹ Stop Recording
@@ -41,11 +133,24 @@ export default function Assessment() {
 
                 </div>
 
-                <p className="mt-6 text-cyan-300">
+                <p className="mt-6 text-cyan-300 font-semibold">
                     Status: {isRecording ? "Recording..." : "Not Recording"}
                 </p>
 
+                <div className="mt-6">
+
+                    <h3 className="text-xl font-bold mb-3">
+                        Recognized Speech:
+                    </h3>
+
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-4 min-h-[120px] text-gray-300">
+                        {transcript || "No speech detected yet"}
+                    </div>
+
+                </div>
+
                 <button
+                    onClick={submitAssessment}
                     className="mt-8 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
                 >
                     Submit Assessment

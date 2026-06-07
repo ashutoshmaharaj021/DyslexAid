@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
+import toast from "react-hot-toast";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -11,15 +12,15 @@ export default function Login() {
     const navigate = useNavigate();
     const handleForgotPassword = async () => {
         if (!email) {
-            alert("Please enter your email first");
+            toast.error("Please enter your email first");
             return;
         }
 
         try {
             await sendPasswordResetEmail(auth, email);
-            alert("Password reset email sent!");
+            toast.success("Password reset email sent 📧");
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         }
     };
     const handleLogin = async (e) => {
@@ -42,11 +43,11 @@ export default function Login() {
                 }
             );
 
-            alert("Login Successful!");
+            toast.success("Login Successful!");
             navigate("/dashboard");
 
         } catch (error) {
-            alert(error.message);
+            toast.error("Invalid email or password");
         }
     };
 

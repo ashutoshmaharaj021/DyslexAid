@@ -20,6 +20,7 @@ import LetterRecognition from "./pages/LetterRecognition";
 import WordMatching from "./pages/WordMatching";
 import ScreeningTest from "./pages/ScreeningTest";
 import AIReport from "./pages/AIReport";
+import { Toaster } from "react-hot-toast";
 
 function Home() {
   return (
@@ -44,7 +45,36 @@ export default function App() {
       <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500/20 blur-3xl rounded-full"></div>
 
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-500/20 blur-3xl rounded-full"></div>
+      <>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 2000,
+            style: {
+              fontSize: "18px",
+              padding: "20px",
+              minWidth: "450px",
+              borderRadius: "20px",
+              background: "rgba(255,255,255,0.1)",
+              backdropFilter: "blur(20px)",
+              color: "#fff",
+              border: "1px solid rgba(255,255,255,0.15)",
+            },
+            success: {
+              style: {
+                border: "1px solid #22c55e",
+              },
+            },
+            error: {
+              style: {
+                border: "1px solid #ef4444",
+              },
+            },
+          }}
+        />
 
+        {/* Routes */}
+      </>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route

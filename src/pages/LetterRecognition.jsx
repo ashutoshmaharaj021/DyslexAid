@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function LetterRecognition() {
     const [score, setScore] = useState(0);
@@ -36,9 +37,9 @@ export default function LetterRecognition() {
 
         if (answer === questions[currentQuestion].correct) {
             setScore((prev) => prev + 1);
-            alert("Correct! 🎉");
+            toast.success("Correct! 🎉");
         } else {
-            alert("Wrong ❌");
+            toast.error("Wrong ❌");
         }
 
         if (currentQuestion < questions.length - 1) {
@@ -56,20 +57,37 @@ export default function LetterRecognition() {
                     <h1 className="text-5xl font-bold mb-6">
                         🎉 Assessment Complete
                     </h1>
-
+                    <h2 className="text-6xl font-bold text-cyan-300 mb-6">
+                        {Math.round((score / questions.length) * 100)}%
+                    </h2>
                     <h2 className="text-3xl mb-4">
                         Score: {score} / {questions.length}
                     </h2>
 
-                    <p className="text-cyan-300 text-xl">
-                        {
-                            score >= 4
-                                ? "Excellent Performance 🌟"
-                                : score >= 2
-                                    ? "Good Job 👍"
-                                    : "Needs More Practice 📚"
-                        }
-                    </p>
+                    <div className="flex flex-col items-center gap-4 mt-6">
+
+                        <p className="text-cyan-300 text-2xl font-semibold">
+                            {
+                                score >= 4
+                                    ? "Excellent Performance 🌟"
+                                    : score >= 2
+                                        ? "Good Job 👍"
+                                        : "Needs More Practice 📚"
+                            }
+                        </p>
+
+                        <button
+                            onClick={() => {
+                                setScore(0);
+                                setCurrentQuestion(0);
+                                setIsFinished(false);
+                            }}
+                            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold cursor-pointer"
+                        >
+                            Play Again
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -84,23 +102,51 @@ export default function LetterRecognition() {
                 Letter Recognition 🔤
             </h1>
 
-            <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8 max-w-2xl">
+            <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8 max-w-4xl mx-auto">
 
                 <p className="text-gray-300 mb-6">
                     Identify the correct letter shown below:
                 </p>
-
-                <div className="text-8xl font-bold text-cyan-300 text-center mb-8">
-                    {questions[currentQuestion].letter}
+                <div className="w-full bg-white/10 h-3 rounded-full mb-6">
+                    <p className="text-gray-400 mt-2 mb-6">
+                        Question {currentQuestion + 1} of {questions.length}
+                    </p>
+                    <div
+                        className="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400"
+                        style={{
+                            width: `${((currentQuestion + 1) / questions.length) * 100}%`
+                        }}
+                    />
                 </div>
+                <div className="bg-white/5 rounded-3xl p-10 text-center mb-8">
 
+                    <p className="text-gray-400 mb-4">
+                        Find this letter
+                    </p>
+
+                    <div className="text-8xl font-bold text-cyan-300">
+                        {questions[currentQuestion].letter}
+                    </div>
+
+                </div>
                 <div className="grid grid-cols-2 gap-4">
 
                     {questions[currentQuestion].options.map((option) => (
                         <button
                             key={option}
                             onClick={() => handleAnswer(option)}
-                            className="p-4 rounded-2xl bg-white/10"
+                            className="
+p-6
+rounded-2xl
+bg-white/10
+border border-white/10
+hover:bg-cyan-500/20
+hover:border-cyan-400
+transition-all
+text-4xl
+font-bold
+cursor-pointer
+"
                         >
                             {option}
                         </button>
@@ -108,12 +154,17 @@ export default function LetterRecognition() {
 
                 </div>
 
-                <p className="mt-8 text-cyan-300 text-xl">
-                    Score: {score}
-                </p>
-                <p className="mt-4 text-gray-300">
-                    Question {currentQuestion + 1} / {questions.length}
-                </p>
+                <div className="flex justify-between items-center mt-8">
+
+                    <p className="text-cyan-300 text-xl font-bold">
+                        Score: {score}
+                    </p>
+
+                    <p className="text-gray-300">
+                        {currentQuestion + 1}/{questions.length}
+                    </p>
+
+                </div>
 
             </div>
 

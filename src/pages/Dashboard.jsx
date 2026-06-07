@@ -49,7 +49,7 @@ export default function Dashboard() {
 
                 <div>
                     <h1 className="text-5xl font-bold mb-3">
-                        Welcome Back 👋
+                        Welcome Back {userData?.name || "User"} 👋
                     </h1>
 
                     <p className="text-cyan-300 text-lg mb-2">
