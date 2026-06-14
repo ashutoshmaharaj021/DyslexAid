@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
+import toast from "react-hot-toast";
 export default function Hero() {
     const navigate = useNavigate();
     return (
@@ -41,7 +42,8 @@ export default function Hero() {
 
                     <button
                         onClick={() => {
-                            alert("Demo Video Coming Soon!");
+
+                            toast("Demo Video Coming Soon!")
                         }}
                         className="px-7 py-4 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg hover:bg-white/20 transition duration-300"
                     >

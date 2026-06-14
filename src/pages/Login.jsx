@@ -1,7 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import {
+    doc,
+    updateDoc,
+    increment,
+    getDoc
+} from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import toast from "react-hot-toast";
@@ -35,6 +40,11 @@ export default function Login() {
                 );
 
             const user = userCredential.user;
+            const deviceId =
+                navigator.userAgent +
+                navigator.language +
+                window.screen.width +
+                window.screen.height;
 
             await updateDoc(
                 doc(db, "users", user.uid),
@@ -43,8 +53,48 @@ export default function Login() {
                 }
             );
 
+            const userDoc = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            const userData = userDoc.data();
+            if (userData.role === "student") {
+
+                const trustedDevices =
+                    userData.trustedDevices || [];
+
+                if (
+                    !trustedDevices.includes(deviceId)
+                ) {
+
+                    toast(
+                        "⚠️ New Device Detected"
+                    );
+
+                    await updateDoc(
+                        doc(db, "users", user.uid),
+                        {
+                            trustedDevices: [
+                                ...trustedDevices,
+                                deviceId
+                            ]
+                        }
+                    );
+                }
+            }
+            console.log("User Data:", userData);
+            console.log("Role:", userData?.role);
             toast.success("Login Successful!");
-            navigate("/dashboard");
+
+            if (userData.role === "teacher") {
+                navigate("/teacher-dashboard");
+            }
+            else if (userData.role === "parent") {
+                navigate("/parent-dashboard");
+            }
+            else {
+                navigate("/dashboard");
+            }
 
         } catch (error) {
             toast.error("Invalid email or password");

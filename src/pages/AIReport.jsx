@@ -1,12 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+    doc,
+    updateDoc,
+    getDoc
+} from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import jsPDF from "jspdf";
+import { generateReportPDF } from "../utils/generateReportPDF";
 
 export default function AIReport() {
     const location = useLocation();
     const navigate = useNavigate();
+    const [userData, setUserData] = useState(null);
+    const [enteredPin, setEnteredPin] = useState("");
+    const [verified, setVerified] = useState(false);
+    const [newPin, setNewPin] = useState("");
+    const [confirmPin, setConfirmPin] = useState("");
 
     const score = location.state?.score || 0;
     const total = location.state?.total || 10;
@@ -44,6 +55,13 @@ export default function AIReport() {
             const user = auth.currentUser;
 
             if (!user) return;
+            const userSnap = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            if (userSnap.exists()) {
+                setUserData(userSnap.data());
+            }
 
             try {
 
@@ -65,23 +83,232 @@ export default function AIReport() {
         saveReport();
 
     }, []);
-    const downloadPDF = () => {
-        const doc = new jsPDF();
+    const verifyPin = () => {
 
-        doc.setFontSize(20);
-        doc.text("DyslexAid AI Report", 20, 20);
+        if (!userData?.guardianPin) {
+            toast.error(
+                "No Guardian PIN Found"
+            );
+            return;
+        }
 
-        doc.setFontSize(12);
-        doc.text(`Score: ${score}/${total}`, 20, 40);
-        doc.text(`Accuracy: ${percentage}%`, 20, 50);
-        doc.text(`Confidence: ${confidence}%`, 20, 60);
-        doc.text(`Risk Level: ${risk}`, 20, 70);
+        if (
+            enteredPin ===
+            userData.guardianPin
+        ) {
 
-        doc.text("Recommendation:", 20, 90);
-        doc.text(recommendation, 20, 100);
+            setVerified(true);
 
-        doc.save("DyslexAid_Report.pdf");
+            toast.success(
+                "PIN Verified"
+            );
+
+        } else {
+
+            toast.error(
+                "Incorrect PIN"
+            );
+        }
     };
+    const createPin = async () => {
+
+        if (!/^\d{4}$/.test(newPin)) {
+            toast.error(
+                "PIN must be 4 digits"
+            );
+            return;
+        }
+
+        if (newPin !== confirmPin) {
+            toast.error(
+                "PINs do not match"
+            );
+            return;
+        }
+
+        try {
+
+            await updateDoc(
+                doc(
+                    db,
+                    "users",
+                    auth.currentUser.uid
+                ),
+                {
+                    guardianPin: newPin
+                }
+            );
+
+            setUserData({
+                ...userData,
+                guardianPin: newPin
+            });
+
+            setVerified(true);
+
+            toast.success(
+                "Guardian PIN Created"
+            );
+
+        } catch (error) {
+
+            toast.error(
+                "Failed to save PIN"
+            );
+        }
+    };
+    const getBadge = () => {
+
+        const xp = userData?.xp || 0;
+
+        if (xp >= 200) return "Expert Reader";
+        if (xp >= 100) return "Skilled Reader";
+        if (xp >= 50) return "Beginner Reader";
+
+        return "No Badge Yet";
+    };
+    const downloadPDF = () => {
+
+        generateReportPDF({
+
+            name: userData?.name,
+
+            studentEmail: userData?.email,
+
+            parentEmail: userData?.parentEmail,
+
+            score,
+
+            total,
+
+            accuracy: percentage,
+
+            confidence,
+
+            risk,
+
+            xp: userData?.xp || 0,
+
+            streak: userData?.streak || 0,
+
+            badge: getBadge(),
+
+            recommendation
+        });
+    };
+    if (!userData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white">
+                Loading Report...
+            </div>
+        );
+    }
+    if (
+        userData &&
+        !userData.guardianPin
+    ) {
+
+        return (
+
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center">
+
+                <div className="bg-white/10 backdrop-blur-2xl p-8 rounded-3xl w-[400px]">
+
+                    <h2 className="text-3xl font-bold text-white mb-4">
+                        🔒 Create Guardian PIN
+                    </h2>
+
+                    <p className="text-gray-300 mb-5">
+                        Set a PIN to protect reports
+                    </p>
+
+                    <input
+                        type="password"
+                        maxLength="4"
+                        value={newPin}
+                        onChange={(e) =>
+                            setNewPin(
+                                e.target.value
+                            )
+                        }
+                        placeholder="Enter 4 Digit PIN"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                verifyPin();
+                            }
+                        }}
+                        className="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white mb-3"
+                    />
+
+                    <input
+                        type="password"
+                        maxLength="4"
+                        value={confirmPin}
+                        onChange={(e) =>
+                            setConfirmPin(
+                                e.target.value
+                            )
+                        }
+                        placeholder="Confirm PIN"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                verifyPin();
+                            }
+                        }}
+                        className="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white"
+                    />
+
+                    <button
+                        onClick={createPin}
+                        className="w-full mt-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
+                    >
+                        Save PIN
+                    </button>
+
+                </div>
+
+            </div>
+
+        );
+    }
+    if (!verified) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 flex items-center justify-center">
+
+                <div className="bg-white/10 backdrop-blur-2xl p-8 rounded-3xl w-[400px]">
+
+                    <h2 className="text-3xl font-bold text-white mb-4">
+                        🔒 Guardian PIN Required
+                    </h2>
+
+                    <p className="text-gray-300 mb-5">
+                        Enter PIN to view report
+                    </p>
+
+                    <input
+                        type="password"
+                        maxLength="4"
+                        value={enteredPin}
+                        onChange={(e) =>
+                            setEnteredPin(
+                                e.target.value
+                            )
+                        }
+                        className="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white"
+                    />
+
+                    <button
+                        onClick={verifyPin}
+                        className="w-full mt-5 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
+                    >
+                        Verify PIN
+                    </button>
+
+                </div>
+
+            </div>
+        );
+    }
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white p-8 flex items-center justify-center">
 

@@ -21,6 +21,9 @@ import WordMatching from "./pages/WordMatching";
 import ScreeningTest from "./pages/ScreeningTest";
 import AIReport from "./pages/AIReport";
 import { Toaster } from "react-hot-toast";
+import GuardianPin from "./pages/GuardianPin";
+import TeacherDashboard from "./pages/TeacherDashboard";
+import ParentDashboard from "./pages/ParentDashboard";
 
 function Home() {
   return (
@@ -49,7 +52,7 @@ export default function App() {
         <Toaster
           position="top-right"
           toastOptions={{
-            duration: 2000,
+            duration: 1500,
             style: {
               fontSize: "18px",
               padding: "20px",
@@ -87,7 +90,20 @@ export default function App() {
         />
         <Route path="/practice" element={<Practice />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/teacher-dashboard"
+          element={<TeacherDashboard />}
+        />
+
+        <Route
+          path="/parent-dashboard"
+          element={<ParentDashboard />}
+        />
         <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/guardian-pin"
+          element={<GuardianPin />}
+        />
         <Route path="/ai-screening" element={<AIScreening />} />
         <Route path="/assessment" element={<Assessment />} />
         <Route

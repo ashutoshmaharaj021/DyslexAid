@@ -3,11 +3,14 @@ import { useState } from "react";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import toast from "react-hot-toast";
 
 export default function Signup() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("student");
+    const [parentEmail, setParentEmail] = useState("");
     const navigate = useNavigate();
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -25,21 +28,53 @@ export default function Signup() {
             await setDoc(
                 doc(db, "users", user.uid),
                 {
-                    name: name,
+                    name,
                     email: user.email,
+
+                    role,
+                    parentEmail:
+                        role === "student"
+                            ? parentEmail
+                            : "",
+
                     xp: 0,
                     streak: 0,
                     badges: 0,
+
+                    guardianPin: "",
+
+                    trustedDevices: [],
+
+                    createdAt: new Date(),
                 }
             );
-
-            alert("Account Created Successfully!");
+            await setDoc(
+                doc(db, "permissions", user.uid),
+                {
+                    teacherAccess: false,
+                    parentAccess: true,
+                    consentGiven: false,
+                }
+            );
+            toast.success("Account Created Successfully!");
 
             setEmail("");
             setPassword("");
-            navigate("/dashboard");
+
+            switch (role) {
+                case "teacher":
+                    navigate("/teacher-dashboard");
+                    break;
+
+                case "parent":
+                    navigate("/parent-dashboard");
+                    break;
+
+                default:
+                    navigate("/dashboard");
+            }
         } catch (error) {
-            alert(error.message);
+            toast.error("Invalid email");
         }
     };
 
@@ -82,6 +117,24 @@ export default function Signup() {
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
                     />
+                    <select
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
+                    >
+                        <option value="student">Student</option>
+                        <option value="parent">Parent</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                    {role === "student" && (
+                        <input
+                            type="email"
+                            placeholder="Parent Email"
+                            value={parentEmail}
+                            onChange={(e) => setParentEmail(e.target.value)}
+                            className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
+                        />
+                    )}
 
                     <button
                         type="submit"
