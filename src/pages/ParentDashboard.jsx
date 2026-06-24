@@ -387,9 +387,9 @@ export default function ParentDashboard() {
                                         getBadge(),
 
                                     recommendation:
-                                        selectedStudent.lastRisk === "High Risk"
+                                        userData?.lastRisk === "High Risk"
                                             ? "Immediate reading support and structured intervention recommended."
-                                            : selectedStudent.lastRisk === "Moderate Risk"
+                                            : userData?.lastRisk === "Moderate Risk"
                                                 ? "Regular reading and pronunciation practice recommended."
                                                 : "Continue current learning activities and reading habits."
                                 });
