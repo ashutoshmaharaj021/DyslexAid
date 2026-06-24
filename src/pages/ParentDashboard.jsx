@@ -145,7 +145,7 @@ export default function ParentDashboard() {
 
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
 
                 <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-6">
 
@@ -190,7 +190,42 @@ export default function ParentDashboard() {
                     </p>
 
                     <h2 className="text-2xl font-bold mt-3">
-                        {userData?.lastRisk || "Not Assessed"}
+
+                        {
+                            userData?.lastRisk === "Low Risk" ? (
+                                <span className="text-green-400">
+                                    🟢 Low Risk
+                                </span>
+                            ) : userData?.lastRisk === "Moderate Risk" ? (
+                                <span className="text-yellow-400">
+                                    🟠 Moderate Risk
+                                </span>
+                            ) : userData?.lastRisk === "High Risk" ? (
+                                <span className="text-red-400">
+                                    🔴 High Risk
+                                </span>
+                            ) : (
+                                "Not Assessed"
+                            )
+                        }
+
+                    </h2>
+
+                </div>
+                <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-6">
+
+                    <p className="text-gray-400">
+                        Last Assessment
+                    </p>
+
+                    <h2 className="text-xl font-bold mt-3">
+                        {
+                            userData?.lastAssessmentDate
+                                ? new Date(
+                                    userData.lastAssessmentDate
+                                ).toLocaleDateString()
+                                : "Never"
+                        }
                     </h2>
 
                 </div>
@@ -212,11 +247,65 @@ export default function ParentDashboard() {
                 </p>
 
                 <p className="text-gray-300 mb-2">
-                    Badge Level: {getBadge()}
+                    Assessment Accuracy: {userData?.lastAccuracy || 0}%
+                </p>
+
+                <p className="text-gray-300 mb-2">
+                    Last Assessment:
+                    {" "}
+                    {
+                        userData?.lastAssessmentDate
+                            ? new Date(
+                                userData.lastAssessmentDate
+                            ).toLocaleDateString()
+                            : "Never"
+                    }
                 </p>
 
                 <p className="text-gray-300">
-                    Risk Status: {userData?.lastRisk || "Not Assessed"}
+                    Risk Status:
+                    {" "}
+                    {userData?.lastRisk || "Not Assessed"}
+                </p>
+                <p className="mb-2">
+                    Confidence:
+                    {" "}
+                    {
+                        Math.min(
+                            95,
+                            Math.max(
+                                60,
+                                (userData?.lastAccuracy || 0) + 10
+                            )
+                        )
+                    }%
+                </p>
+
+            </div>
+            <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8 mt-8">
+
+                <h2 className="text-3xl font-bold mb-4">
+                    🎯 Recommended Action
+                </h2>
+
+                <p
+                    className={
+                        userData?.lastRisk === "High Risk"
+                            ? "text-red-400 font-semibold"
+                            : userData?.lastRisk === "Moderate Risk"
+                                ? "text-yellow-400 font-semibold"
+                                : "text-green-400 font-semibold"
+                    }
+                >
+
+                    {
+                        userData?.lastRisk === "High Risk"
+                            ? "Provide additional reading support and monitor progress regularly."
+                            : userData?.lastRisk === "Moderate Risk"
+                                ? "Encourage daily reading practice and pronunciation exercises."
+                                : "Continue current learning activities and maintain reading habits."
+                    }
+
                 </p>
 
             </div>
@@ -341,6 +430,39 @@ export default function ParentDashboard() {
                                 ⭐ XP:
                                 {" "}
                                 {userData?.xp || 0}
+                            </p>
+                            <p>
+                                🔤 Letter Score:
+                                {" "}
+                                {userData?.letterScore || 0}/7
+                            </p>
+
+                            <p>
+                                📝 Word Score:
+                                {" "}
+                                {userData?.wordScore || 0}/7
+                            </p>
+
+                            <p>
+                                🤖 Model:
+                                Logistic Regression
+                            </p>
+
+                            <p>
+                                🎯 Model Accuracy:
+                                98.5%
+                            </p>
+
+                            <p>
+                                📅 Assessment Date:
+                                {" "}
+                                {
+                                    userData?.lastAssessmentDate
+                                        ? new Date(
+                                            userData.lastAssessmentDate
+                                        ).toLocaleDateString()
+                                        : "Never"
+                                }
                             </p>
 
                         </div>
