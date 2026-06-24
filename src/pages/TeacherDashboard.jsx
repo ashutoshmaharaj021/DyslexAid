@@ -213,7 +213,11 @@ export default function TeacherDashboard() {
                     ),
 
                     recommendation:
-                        "Teacher Access Copy"
+                        selectedStudent.lastRisk === "High Risk"
+                            ? "Immediate reading support and structured intervention recommended."
+                            : selectedStudent.lastRisk === "Moderate Risk"
+                                ? "Regular reading and pronunciation practice recommended."
+                                : "Continue current learning activities and reading habits."
                 });
 
             } else {
@@ -347,31 +351,50 @@ export default function TeacherDashboard() {
                             <p className="text-gray-400">
                                 {student.email}
                             </p>
-
-                            <div className="grid md:grid-cols-3 gap-4 mt-4">
+                            <div className="grid md:grid-cols-4 gap-4 mt-4">
 
                                 <div>
-                                    🔥 Streak:
-                                    {" "}
-                                    {student.streak || 0}
+                                    🔥 Streak: {student.streak || 0}
                                 </div>
 
                                 <div>
-                                    🏆
-                                    {" "}
-                                    {getBadge(
-                                        student.xp || 0
-                                    )}
+                                    🏆 {getBadge(student.xp || 0)}
                                 </div>
 
                                 <div>
-                                    🧠
-                                    {" "}
-                                    {student.lastRisk ||
-                                        "Not Assessed"}
+                                    {
+                                        student.lastRisk === "Low Risk" ? (
+                                            <span className="text-green-400 font-bold">
+                                                🟢 Low Risk
+                                            </span>
+                                        ) : student.lastRisk === "Moderate Risk" ? (
+                                            <span className="text-yellow-400 font-bold">
+                                                🟠 Moderate Risk
+                                            </span>
+                                        ) : student.lastRisk === "High Risk" ? (
+                                            <span className="text-red-400 font-bold">
+                                                🔴 High Risk
+                                            </span>
+                                        ) : (
+                                            <span>
+                                                Not Assessed
+                                            </span>
+                                        )
+                                    }
+                                </div>
+
+                                <div>
+                                    {
+                                        student.lastAssessmentDate
+                                            ? new Date(
+                                                student.lastAssessmentDate
+                                            ).toLocaleDateString()
+                                            : "No Assessment"
+                                    }
                                 </div>
 
                             </div>
+
                             <button
                                 onClick={() =>
                                     setSelectedStudent(student)
@@ -436,7 +459,27 @@ export default function TeacherDashboard() {
                                 {" "}
                                 {selectedStudent.xp || 0}
                             </p>
+                            <p>
+                                🔤 Letter Score:
+                                {" "}
+                                {selectedStudent.letterScore || 0}/7
+                            </p>
 
+                            <p>
+                                📝 Word Score:
+                                {" "}
+                                {selectedStudent.wordScore || 0}/7
+                            </p>
+
+                            <p>
+                                🤖 Model:
+                                Logistic Regression
+                            </p>
+
+                            <p>
+                                🎯 Model Accuracy:
+                                98.5%
+                            </p>
                         </div>
                         <button
                             onClick={() =>

@@ -24,6 +24,9 @@ import { Toaster } from "react-hot-toast";
 import GuardianPin from "./pages/GuardianPin";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import ParentDashboard from "./pages/ParentDashboard";
+import ScreeningVoice from "./pages/ScreeningVoice";
+import ScreeningLetter from "./pages/ScreeningLetter";
+import ScreeningWord from "./pages/ScreeningWord";
 
 function Home() {
   return (
@@ -105,7 +108,11 @@ export default function App() {
           element={<GuardianPin />}
         />
         <Route path="/ai-screening" element={<AIScreening />} />
+        <Route path="/screening-voice" element={<ScreeningVoice />} />
+        <Route path="/screening-letter" element={<ScreeningLetter />} />
+        <Route path="/screening-word" element={<ScreeningWord />} />
         <Route path="/assessment" element={<Assessment />} />
+
         <Route
           path="/letter-recognition"
           element={<LetterRecognition />}

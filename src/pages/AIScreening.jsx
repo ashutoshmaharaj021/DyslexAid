@@ -60,7 +60,7 @@ export default function AIScreening() {
                     </div>
 
                     <button
-                        onClick={() => navigate("/screening-test")}
+                        onClick={() => navigate("/screening-voice")}
                         className="px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold text-lg"
                     >
                         Start Assessment

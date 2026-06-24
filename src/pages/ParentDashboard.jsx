@@ -387,7 +387,11 @@ export default function ParentDashboard() {
                                         getBadge(),
 
                                     recommendation:
-                                        "Parent Access Copy"
+                                        selectedStudent.lastRisk === "High Risk"
+                                            ? "Immediate reading support and structured intervention recommended."
+                                            : selectedStudent.lastRisk === "Moderate Risk"
+                                                ? "Regular reading and pronunciation practice recommended."
+                                                : "Continue current learning activities and reading habits."
                                 });
 
                             }}
