@@ -17,6 +17,10 @@ export default function FocusTracker() {
         useState(0);
     const [headDirection, setHeadDirection] =
         useState("Focused");
+    const [eyeDirection, setEyeDirection] =
+        useState("👀 Looking Center");
+    const [attentionScore, setAttentionScore] =
+        useState(100);
 
     useEffect(() => {
 
@@ -114,10 +118,46 @@ export default function FocusTracker() {
                         videoRef.current,
                         nowInMs
                     );
-                console.log(results.facialTransformationMatrixes);
+                // console.log(results.facialTransformationMatrixes);
 
                 if (results.faceLandmarks.length > 0) {
 
+                    const landmarks =
+                        results.faceLandmarks[0];
+
+                    const leftIris =
+                        landmarks[468];
+                    const rightIris =
+                        landmarks[473];
+                    const leftEyeOuter = landmarks[33];
+                    const leftEyeInner = landmarks[133];
+                    const rightEyeInner = landmarks[362];
+                    const rightEyeOuter = landmarks[263];
+                    const leftRatio =
+                        (leftIris.x - leftEyeOuter.x) /
+                        (leftEyeInner.x - leftEyeOuter.x);
+                    const rightRatio =
+                        (rightIris.x - rightEyeInner.x) /
+                        (rightEyeOuter.x - rightEyeInner.x);
+
+                    // console.log("Left Iris", leftIris);
+                    // console.log("Right Iris", rightIris);
+
+                    if (leftRatio < 0.35 && rightRatio < 0.35) {
+
+                        setEyeDirection("👉 Eyes Right");
+
+                    }
+                    else if (leftRatio > 0.65 && rightRatio > 0.65) {
+
+                        setEyeDirection("👈 Eyes Left");
+
+                    }
+                    else {
+
+                        setEyeDirection("👀 Looking Center");
+
+                    }
                     const matrix =
                         results.facialTransformationMatrixes[0].data;
 
@@ -206,12 +246,19 @@ export default function FocusTracker() {
 
         const interval = setInterval(() => {
 
-            if (faceDetected) {
+            const isFocused =
+
+                faceDetected &&
+
+                headDirection === "🎯 Focused" &&
+
+                eyeDirection === "👀 Looking Center";
+
+            if (isFocused) {
 
                 setFocusedSeconds(prev => prev + 1);
 
             }
-
             else {
 
                 setDistractedSeconds(prev => prev + 1);
@@ -222,8 +269,52 @@ export default function FocusTracker() {
 
         return () => clearInterval(interval);
 
-    }, [faceDetected]);
+    }, [faceDetected, headDirection, eyeDirection]);
 
+    useEffect(() => {
+
+        const totalTime =
+            focusedSeconds + distractedSeconds;
+
+        if (totalTime === 0) {
+
+            setAttentionScore(100);
+
+            return;
+
+        }
+
+        const score = Math.round(
+
+            (focusedSeconds / totalTime) * 100
+
+        );
+
+        setAttentionScore(score);
+
+    }, [focusedSeconds, distractedSeconds]);
+    useEffect(() => {
+
+        localStorage.setItem(
+            "attentionScore",
+            attentionScore
+        );
+
+        localStorage.setItem(
+            "focusedSeconds",
+            focusedSeconds
+        );
+
+        localStorage.setItem(
+            "distractedSeconds",
+            distractedSeconds
+        );
+
+    }, [
+        attentionScore,
+        focusedSeconds,
+        distractedSeconds
+    ]);
     return (
 
         <div className="fixed bottom-5 right-5">
@@ -258,6 +349,9 @@ export default function FocusTracker() {
                 <p className="font-bold text-cyan-400 mb-2">
                     {headDirection}
                 </p>
+                <p className="font-bold text-yellow-300 mb-2">
+                    {eyeDirection}
+                </p>
 
                 <p>
                     🎯 Focused :
@@ -270,6 +364,7 @@ export default function FocusTracker() {
                     {" "}
                     {distractedSeconds}s
                 </p>
+
 
             </div>
 

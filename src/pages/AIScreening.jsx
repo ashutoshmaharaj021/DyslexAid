@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import FocusTracker from "../components/FocusTrackerV2";
+
 export default function AIScreening() {
     const navigate = useNavigate();
 
@@ -73,7 +73,6 @@ export default function AIScreening() {
 
             </div>
 
-            <FocusTracker />
         </>
     );
 }

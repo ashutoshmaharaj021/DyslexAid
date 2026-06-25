@@ -27,6 +27,7 @@ import ParentDashboard from "./pages/ParentDashboard";
 import ScreeningVoice from "./pages/ScreeningVoice";
 import ScreeningLetter from "./pages/ScreeningLetter";
 import ScreeningWord from "./pages/ScreeningWord";
+import ScreeningLayout from "./layouts/ScreeningLayout";
 
 function Home() {
   return (
@@ -97,7 +98,6 @@ export default function App() {
           path="/teacher-dashboard"
           element={<TeacherDashboard />}
         />
-
         <Route
           path="/parent-dashboard"
           element={<ParentDashboard />}
@@ -107,10 +107,24 @@ export default function App() {
           path="/guardian-pin"
           element={<GuardianPin />}
         />
-        <Route path="/ai-screening" element={<AIScreening />} />
-        <Route path="/screening-voice" element={<ScreeningVoice />} />
-        <Route path="/screening-letter" element={<ScreeningLetter />} />
-        <Route path="/screening-word" element={<ScreeningWord />} />
+        <Route element={<ScreeningLayout />}>
+          <Route
+            path="/ai-screening"
+            element={<AIScreening />}
+          />
+          <Route
+            path="/screening-voice"
+            element={<ScreeningVoice />}
+          />
+          <Route
+            path="/screening-letter"
+            element={<ScreeningLetter />}
+          />
+          <Route
+            path="/screening-word"
+            element={<ScreeningWord />}
+          />
+        </Route>
         <Route path="/assessment" element={<Assessment />} />
 
         <Route

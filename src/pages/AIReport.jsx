@@ -32,6 +32,31 @@ export default function AIReport() {
 
     const wordScore =
         Number(localStorage.getItem("wordScore")) || 0;
+    const attentionScore =
+        Number(localStorage.getItem("attentionScore")) || 0;
+
+    const focusedSeconds =
+        Number(localStorage.getItem("focusedSeconds")) || 0;
+
+    const distractedSeconds =
+        Number(localStorage.getItem("distractedSeconds")) || 0;
+    const formatTime = (seconds) => {
+
+        const minutes = Math.floor(seconds / 60);
+
+        const remainingSeconds = seconds % 60;
+
+        if (minutes === 0) {
+
+            return `${remainingSeconds} sec`;
+
+        }
+
+        return `${minutes} min ${remainingSeconds} sec`;
+
+    };
+
+
     const strengths = [];
     const improvements = [];
     let analysis = "";
@@ -525,6 +550,54 @@ export default function AIReport() {
                     </p>
 
                 </div>
+                <div className="bg-white/5 rounded-2xl p-8 mb-8">
+
+                    <h2 className="text-2xl font-bold mb-6">
+                        👀 Behavioral Analysis
+                    </h2>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+
+                        <div className="bg-white/5 rounded-2xl p-4 text-center">
+
+                            <p className="text-gray-400">
+                                Attention Score
+                            </p>
+
+                            <h3 className="text-3xl font-bold text-cyan-400">
+                                {attentionScore}%
+                            </h3>
+
+                        </div>
+
+                        <div className="bg-white/5 rounded-2xl p-4 text-center">
+
+                            <p className="text-gray-400">
+                                Focused Time
+                            </p>
+
+                            <h3 className="text-3xl font-bold text-green-400">
+                                {formatTime(focusedSeconds)}
+                            </h3>
+
+                        </div>
+
+                        <div className="bg-white/5 rounded-2xl p-4 text-center">
+
+                            <p className="text-gray-400">
+                                Distracted Time
+                            </p>
+
+                            <h3 className="text-3xl font-bold text-red-400">
+                                {formatTime(distractedSeconds)}
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div className="grid md:grid-cols-3 gap-4 mb-6">
 
                     <div className="bg-white/5 rounded-2xl p-4 text-center">
