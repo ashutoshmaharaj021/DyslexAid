@@ -44,6 +44,11 @@ export default function Signup() {
                     guardianPin: "",
 
                     trustedDevices: [],
+                    practiceVoiceCompleted: false,
+
+                    practiceLetterCompleted: false,
+
+                    practiceWordCompleted: false,
 
                     createdAt: new Date(),
                 }

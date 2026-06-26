@@ -88,14 +88,14 @@ export default function ScreeningLetter() {
                     Identify the correct letter shown below:
                 </p>
 
-                <div className="w-full bg-white/10 h-3 rounded-full mb-6">
+                <p className="text-gray-400 mb-3">
+                    Question {currentQuestion + 1} of {questions.length}
+                </p>
 
-                    <p className="text-gray-400 mt-2 mb-6">
-                        Question {currentQuestion + 1} of {questions.length}
-                    </p>
+                <div className="w-full bg-white/10 rounded-full h-3 mb-8 overflow-hidden">
 
                     <div
-                        className="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400"
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all duration-500"
                         style={{
                             width: `${((currentQuestion + 1) / questions.length) * 100}%`
                         }}

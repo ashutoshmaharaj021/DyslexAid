@@ -1,5 +1,8 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { auth, db } from "../firebase";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 export default function Assessment() {
     const navigate = useNavigate();
@@ -79,33 +82,54 @@ export default function Assessment() {
         );
     };
 
-    const submitAssessment = () => {
+    const submitAssessment = async () => {
 
         const accuracy = calculateAccuracy();
 
-        const score = Math.round(
-            (accuracy / 100) * 20
-        );
+        try {
 
-        navigate("/ai-report", {
-            state: {
-                score,
-                total: 20
-            }
-        });
+            const user = auth.currentUser;
+
+            if (!user) return;
+
+            await updateDoc(
+                doc(db, "users", user.uid),
+                {
+                    xp: increment(10),
+
+                    practiceVoiceCompleted: true
+                }
+            );
+
+
+            toast.success(
+                `Practice Completed! +10 XP 🎉`
+            );
+
+            navigate("/practice");
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+            toast.error("Something went wrong");
+
+        }
+
     };
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white p-8">
 
             <h1 className="text-5xl font-bold mb-6">
-                Voice Reading 📖
+                Voice Reading Practice 📖
             </h1>
 
             <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8">
 
                 <h2 className="text-2xl font-bold mb-4">
-                    Read the paragraph below:
+                    Read the paragraph aloud to practice your pronunciation and reading fluency.
                 </h2>
 
                 <p className="text-gray-300 leading-8 text-lg mb-8">
@@ -146,6 +170,9 @@ export default function Assessment() {
                     <div className="bg-white/5 border border-white/10 rounded-2xl p-4 min-h-[120px] text-gray-300">
                         {transcript || "No speech detected yet"}
                     </div>
+                    <p className="mt-6 text-lg text-cyan-300 font-bold">
+                        Accuracy : {calculateAccuracy()}%
+                    </p>
 
                 </div>
 
@@ -153,7 +180,7 @@ export default function Assessment() {
                     onClick={submitAssessment}
                     className="mt-8 px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
                 >
-                    Submit Assessment
+                    Finish Practice
                 </button>
 
             </div>

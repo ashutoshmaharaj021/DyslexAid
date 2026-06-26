@@ -5,6 +5,10 @@ import { doc, updateDoc, increment } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 export default function Practice() {
     const [xp, setXp] = useState(0);
+    const [practiceVoiceCompleted, setPracticeVoiceCompleted] = useState(false);
+    const [practiceLetterCompleted, setPracticeLetterCompleted] = useState(false);
+    const [practiceWordCompleted, setPracticeWordCompleted] = useState(false);
+
     const [completedExercises, setCompletedExercises] = useState([]);
     const navigate = useNavigate();
     useEffect(() => {
@@ -18,60 +22,50 @@ export default function Practice() {
             );
 
             if (docSnap.exists()) {
-                setXp(docSnap.data().xp || 0);
+
+                const data = docSnap.data();
+
+                setXp(data.xp || 0);
+
+                setPracticeVoiceCompleted(
+                    data.practiceVoiceCompleted || false
+                );
+
+                setPracticeLetterCompleted(
+                    data.practiceLetterCompleted || false
+                );
+
+                setPracticeWordCompleted(
+                    data.practiceWordCompleted || false
+                );
+
             }
         };
 
         fetchXP();
     }, []);
-    const handleExerciseComplete = async (rewardXp) => {
-        if (completedExercises.includes(rewardXp)) {
-            alert("Exercise already completed!");
-            return;
-        }
-        try {
 
-
-            const user = auth.currentUser;
-
-            console.log(user);
-
-            await updateDoc(
-                doc(db, "users", user.uid),
-                {
-                    xp: increment(rewardXp)
-                }
-            );
-            setXp((prev) => prev + rewardXp);
-            setCompletedExercises([
-                ...completedExercises,
-                rewardXp
-            ]);
-            alert(`+${rewardXp} XP Earned! 🎉`);
-
-        } catch (error) {
-            console.log(error);
-            alert(error.message);
-        }
-    };
     const exercises = [
         {
             title: "Voice Reading",
             description: "Read a short paragraph and answer questions.",
             xp: 10,
-            route: "/assessment"
+            route: "/assessment",
+            completed: practiceVoiceCompleted
         },
         {
             title: "Letter Recognition",
             description: "Identify similar-looking letters and words.",
             xp: 15,
-            route: "/letter-recognition"
+            route: "/letter-recognition",
+            completed: practiceLetterCompleted
         },
         {
             title: "Word Matching",
             description: "Practice pronunciation and fluency.",
             xp: 20,
-            route: "/word-matching"
+            route: "/word-matching",
+            completed: practiceWordCompleted
         },
     ];
 
@@ -108,21 +102,27 @@ export default function Practice() {
                             Reward: {exercise.xp} XP
                         </p>
 
-                        <button
-                            onClick={() => navigate(exercise.route)}
-                            className="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
-                        >
-                            Start Exercise
-                        </button>
-                        <button
-                            onClick={() => handleExerciseComplete(exercise.xp)}
-                            disabled={completedExercises.includes(exercise.xp)}
-                            className="w-full mt-3 py-3 rounded-2xl border border-cyan-400 text-cyan-300 font-bold disabled:opacity-50"
-                        >
-                            {completedExercises.includes(exercise.xp)
-                                ? "Completed ✅"
-                                : "Complete Exercise"}
-                        </button>
+                        {exercise.completed ? (
+
+                            <div className="w-full py-3 rounded-2xl bg-green-500 text-center font-bold text-white">
+
+                                ✅ Completed
+
+                            </div>
+
+                        ) : (
+
+                            <button
+                                onClick={() => navigate(exercise.route)}
+                                className="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold"
+                            >
+
+                                Start Exercise
+
+                            </button>
+
+                        )}
+
                     </div>
                 ))}
 

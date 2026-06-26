@@ -24,11 +24,11 @@ export default function ScreeningWord() {
         },
         {
             correct: "Beautiful",
-            options: ["Beautifull", "Beautiful", "Beautifal", "Beautifl"],
+            options: ["Beautifull", "Beautifal", "Beautiful", "Beautifl"],
         },
         {
             correct: "Necessary",
-            options: ["Necesary", "Necessary", "Necassary", "Necesery"],
+            options: ["Necesary", "Necassary", "Necesery", "Necessary"],
         },
         {
             correct: "Wednesday",
@@ -36,7 +36,7 @@ export default function ScreeningWord() {
         },
         {
             correct: "Different",
-            options: ["Diffrent", "Different", "Diferent", "Diffarent"],
+            options: ["Different", "Diffrent", "Diferent", "Diffarent"],
         },
     ];
 
@@ -96,20 +96,20 @@ export default function ScreeningWord() {
                 📝 Word Recognition Screening
             </h1>
 
-            <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8 max-w-3xl mx-auto">
+            <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-8 max-w-4xl mx-auto">
 
-                <p className="text-gray-300 mb-6">
-                    Choose the correct spelling:
+                <p className="text-gray-300 mb-8 text-center text-lg">
+                    Which is the correct spelling?
                 </p>
 
-                <div className="w-full bg-white/10 h-3 rounded-full mb-6">
+                <p className="text-gray-400 mb-3">
+                    Question {currentQuestion + 1} of {questions.length}
+                </p>
 
-                    <p className="text-gray-400 mt-2 mb-6">
-                        Question {currentQuestion + 1} of {questions.length}
-                    </p>
+                <div className="w-full bg-white/10 rounded-full h-3 mb-8 overflow-hidden">
 
                     <div
-                        className="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400"
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all duration-500"
                         style={{
                             width: `${((currentQuestion + 1) / questions.length) * 100}%`
                         }}
@@ -123,7 +123,18 @@ export default function ScreeningWord() {
                         <button
                             key={option}
                             onClick={() => handleAnswer(option)}
-                            className="p-4 rounded-2xl bg-white/10 border border-white/10 hover:bg-cyan-500/20 transition-all"
+                            className="
+p-6
+rounded-2xl
+bg-white/10
+border border-white/10
+hover:bg-cyan-500/20
+hover:border-cyan-400
+transition-all
+text-3xl
+font-bold
+cursor-pointer
+"
                         >
                             {option}
                         </button>
@@ -131,9 +142,9 @@ export default function ScreeningWord() {
 
                 </div>
 
-                <div className="flex justify-between mt-8">
+                <div className="flex justify-between items-center mt-8">
 
-                    <p className="text-cyan-300 font-bold">
+                    <p className="text-cyan-300 text-xl font-bold">
                         Score: {score}
                     </p>
 

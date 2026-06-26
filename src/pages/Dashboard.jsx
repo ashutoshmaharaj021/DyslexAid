@@ -20,6 +20,8 @@ export default function Dashboard() {
     const user = auth.currentUser;
     const [userData, setUserData] = useState(null);
     const [permissions, setPermissions] = useState(null);
+    const [dailyGoal, setDailyGoal] = useState(0);
+
     const handleLogout = async () => {
         await signOut(auth);
         navigate("/");
@@ -40,6 +42,20 @@ export default function Dashboard() {
 
                 setUserData(data);
 
+                let completed = 0;
+
+                if (data.practiceVoiceCompleted)
+                    completed++;
+
+                if (data.practiceLetterCompleted)
+                    completed++;
+
+                if (data.practiceWordCompleted)
+                    completed++;
+
+                setDailyGoal(
+                    Math.round((completed / 3) * 100)
+                );
 
             }
             const permissionRef = doc(
@@ -195,10 +211,19 @@ export default function Dashboard() {
 
                     <div className="backdrop-blur-2xl bg-white/10 border border-white/10 rounded-3xl p-6">
                         <p className="text-gray-400 mb-2">🎯 Daily Goal</p>
-                        <h2 className="text-4xl font-bold">60%</h2>
+                        <h2 className="text-4xl font-bold">
+                            {dailyGoal}%
+                        </h2>
 
-                        <div className="w-full bg-white/10 h-3 rounded-full mt-4">
-                            <div className="w-3/5 h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400"></div>
+                        <div className="w-full bg-white/10 h-3 rounded-full mt-4 overflow-hidden">
+
+                            <div
+                                className="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all duration-500"
+                                style={{
+                                    width: `${dailyGoal}%`
+                                }}
+                            />
+
                         </div>
                     </div>
 
@@ -300,24 +325,22 @@ export default function Dashboard() {
 
                     <div className="space-y-4">
 
-                        <label className="flex gap-3">
+                        <div className="flex items-center gap-3">
 
                             <input
                                 type="checkbox"
-                                checked={
-                                    permissions?.parentAccess || false
-                                }
-                                onChange={(e) =>
-                                    updatePermission(
-                                        "parentAccess",
-                                        e.target.checked
-                                    )
-                                }
+                                checked
+                                disabled
                             />
 
-                            Share with Parents
+                            <span>
 
-                        </label>
+                                Share with Parents
+
+
+                            </span>
+
+                        </div>
 
                         <label className="flex gap-3">
 

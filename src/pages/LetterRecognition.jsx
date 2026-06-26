@@ -1,5 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { auth, db } from "../firebase";
+import { doc, updateDoc, increment } from "firebase/firestore";
 
 export default function LetterRecognition() {
     const [score, setScore] = useState(0);
@@ -33,7 +35,7 @@ export default function LetterRecognition() {
             options: ["m", "w", "n", "u"],
         },
     ];
-    const handleAnswer = (answer) => {
+    const handleAnswer = async (answer) => {
 
         if (answer === questions[currentQuestion].correct) {
             setScore((prev) => prev + 1);
@@ -45,7 +47,38 @@ export default function LetterRecognition() {
         if (currentQuestion < questions.length - 1) {
             setCurrentQuestion((prev) => prev + 1);
         } else {
+
+            try {
+
+                const user = auth.currentUser;
+
+                if (user) {
+
+                    await updateDoc(
+                        doc(db, "users", user.uid),
+                        {
+                            xp: increment(15),
+
+                            practiceLetterCompleted: true
+                        }
+                    );
+
+
+
+                    toast.success("+15 XP Earned 🎉");
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.log(error);
+
+            }
+
             setIsFinished(true);
+
         }
     };
     if (isFinished) {
@@ -107,16 +140,19 @@ export default function LetterRecognition() {
                 <p className="text-gray-300 mb-6">
                     Identify the correct letter shown below:
                 </p>
-                <div className="w-full bg-white/10 h-3 rounded-full mb-6">
-                    <p className="text-gray-400 mt-2 mb-6">
-                        Question {currentQuestion + 1} of {questions.length}
-                    </p>
+                <p className="text-gray-400 mb-3">
+                    Question {currentQuestion + 1} of {questions.length}
+                </p>
+
+                <div className="w-full bg-white/10 rounded-full h-3 mb-8 overflow-hidden">
+
                     <div
-                        className="h-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400"
+                        className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 transition-all duration-500"
                         style={{
                             width: `${((currentQuestion + 1) / questions.length) * 100}%`
                         }}
                     />
+
                 </div>
                 <div className="bg-white/5 rounded-3xl p-10 text-center mb-8">
 
