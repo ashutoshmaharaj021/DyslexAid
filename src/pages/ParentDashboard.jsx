@@ -1,5 +1,8 @@
 import { auth, db } from "../firebase";
-import { signOut } from "firebase/auth";
+import {
+    signOut,
+    onAuthStateChanged
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -19,6 +22,7 @@ export default function ParentDashboard() {
     const [showReport, setShowReport] = useState(false);
     const [showPinModal, setShowPinModal] = useState(false);
     const [enteredPin, setEnteredPin] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const handleLogout = async () => {
         await signOut(auth);
@@ -27,11 +31,12 @@ export default function ParentDashboard() {
 
     useEffect(() => {
 
-        const fetchData = async () => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
 
-            const currentUser = auth.currentUser;
-
-            if (!currentUser) return;
+            if (!currentUser) {
+                setLoading(false);
+                return;
+            }
 
             const usersSnap = await getDocs(
                 collection(db, "users")
@@ -49,14 +54,18 @@ export default function ParentDashboard() {
                 ) {
                     linkedStudent = data;
                 }
+
             });
 
             if (linkedStudent) {
                 setUserData(linkedStudent);
             }
-        };
 
-        fetchData();
+            setLoading(false);
+
+        });
+
+        return () => unsubscribe();
 
     }, []);
 
@@ -90,7 +99,23 @@ export default function ParentDashboard() {
             );
         }
     };
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white">
 
+                <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-6"></div>
+
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+                    DyslexAid
+                </h1>
+
+                <p className="mt-4 text-gray-400 text-lg">
+                    Loading Parent Dashboard...
+                </p>
+
+            </div>
+        );
+    }
     if (!userData) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white">
