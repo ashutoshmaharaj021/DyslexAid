@@ -27,6 +27,7 @@ import ParentDashboard from "./pages/ParentDashboard";
 import ScreeningVoice from "./pages/ScreeningVoice";
 import ScreeningLetter from "./pages/ScreeningLetter";
 import ScreeningWord from "./pages/ScreeningWord";
+import NotFound from "./pages/NotFound";
 import ScreeningLayout from "./layouts/ScreeningLayout";
 
 function Home() {
@@ -138,6 +139,7 @@ export default function App() {
           element={<WordMatching />}
 
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
