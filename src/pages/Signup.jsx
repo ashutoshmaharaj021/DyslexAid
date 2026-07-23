@@ -9,6 +9,7 @@ export default function Signup() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [role, setRole] = useState("student");
     const [parentEmail, setParentEmail] = useState("");
     const navigate = useNavigate();
@@ -115,13 +116,25 @@ export default function Signup() {
                         className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
                     />
 
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
-                    />
+                    <div className="relative">
+
+    <input
+        type={showPassword ? "text" : "password"}
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none pr-14"
+    />
+
+    <button
+        type="button"
+        onClick={() => setShowPassword(!showPassword)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition-colors"
+    >
+        {showPassword ? "🙈" : "👁️"}
+    </button>
+
+</div>
                     <select
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
