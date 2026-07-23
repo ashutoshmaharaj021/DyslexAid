@@ -731,60 +731,7 @@ export default function AIReport() {
 
                 </div>
 
-                <div className="bg-white/5 rounded-2xl p-6 mt-8">
-                    <h2 className="text-2xl font-bold mb-4">
-                        🤖 AI Model Information
-                    </h2>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-
-                        <div className="bg-white/5 rounded-xl p-4">
-                            <p className="text-gray-400 text-sm">
-                                Model Used
-                            </p>
-                            <h3 className="text-xl font-bold text-cyan-300">
-                                Logistic Regression
-                            </h3>
-                        </div>
-
-                        <div className="bg-white/5 rounded-xl p-4">
-                            <p className="text-gray-400 text-sm">
-                                Validation Accuracy
-                            </p>
-                            <h3 className="text-xl font-bold text-green-400">
-                                98.5%
-                            </h3>
-                        </div>
-
-                        <div className="bg-white/5 rounded-xl p-4">
-                            <p className="text-gray-400 text-sm">
-                                Features Analysed
-                            </p>
-                            <ul className="mt-2 space-y-1 text-pink-300 font-semibold">
-                                <li>🎤 Voice Reading</li>
-                                <li>🔤 Letter Recognition</li>
-                                <li>📝 Word Recognition</li>
-                            </ul>
-                        </div>
-
-                        <div className="bg-white/5 rounded-xl p-4">
-                            <p className="text-gray-400 text-sm">
-                                Risk Categories
-                            </p>
-                            <h3 className="text-lg font-bold text-yellow-300">
-                                Low / Moderate / High
-                            </h3>
-                        </div>
-
-                    </div>
-
-                    <p className="text-gray-300 mt-6">
-                        This assessment was generated using a Machine Learning
-                        model trained on dyslexia screening indicators including
-                        voice reading accuracy, letter recognition, and word
-                        recognition performance.
-                    </p>
-                </div>
                 <div className="h-6"></div>
                 <div className="flex gap-4 justify-center">
                     <button
