@@ -9,7 +9,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 80 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="relative z-10 px-8 md:px-16 py-24 flex flex-col lg:flex-row items-center justify-between gap-16"
+            className="relative z-10 px-8 md:px-16 pt-36 pb-24 flex flex-col lg:flex-row items-center justify-between gap-16"
         >
 
             <div className="max-w-2xl">

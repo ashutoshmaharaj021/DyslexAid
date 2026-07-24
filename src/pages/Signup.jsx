@@ -4,6 +4,8 @@ import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 export default function Signup() {
     const [name, setName] = useState("");
@@ -118,32 +120,65 @@ export default function Signup() {
 
                     <div className="relative">
 
-    <input
-        type={showPassword ? "text" : "password"}
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none pr-14"
-    />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none pr-14"
+                        />
 
-    <button
-        type="button"
-        onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition-colors"
-    >
-        {showPassword ? "🙈" : "👁️"}
-    </button>
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 right-5 flex items-center text-white/50 hover:text-cyan-300 transition-colors duration-200"
+                        >
+                            {showPassword ? (
+                                <EyeOff size={20} strokeWidth={2} />
+                            ) : (
+                                <Eye size={20} strokeWidth={2} />
+                            )}
+                        </button>
 
-</div>
-                    <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        className="w-full p-4 rounded-2xl bg-white/10 border border-white/10 text-white outline-none"
-                    >
-                        <option value="student">Student</option>
-                        <option value="parent">Parent</option>
-                        <option value="teacher">Teacher</option>
-                    </select>
+                    </div>
+                    <div className="relative">
+
+                        <select
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            className="
+            w-full
+            py-5
+            px-5
+            pr-14
+            rounded-2xl
+            bg-white/10
+            border
+            border-white/10
+            text-white
+            outline-none
+            appearance-none
+        "
+                        >
+                            <option value="student" className="text-black">
+                                Student
+                            </option>
+
+                            <option value="parent" className="text-black">
+                                Parent
+                            </option>
+
+                            <option value="teacher" className="text-black">
+                                Teacher
+                            </option>
+                        </select>
+
+                        <ChevronDown
+                            size={20}
+                            className="absolute right-5 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none"
+                        />
+
+                    </div>
                     {role === "student" && (
                         <input
                             type="email"
