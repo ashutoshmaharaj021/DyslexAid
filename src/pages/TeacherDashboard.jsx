@@ -127,6 +127,28 @@ export default function TeacherDashboard() {
         return "No Badge";
     };
 
+    const formatLog = (action) => {
+
+        if (!action) return "Activity";
+
+        if (action.includes("teacherAccess changed to true"))
+            return "✅ Teacher access granted";
+
+        if (action.includes("teacherAccess changed to false"))
+            return "❌ Teacher access revoked";
+
+        if (action.includes("Teacher downloaded report"))
+            return "📄 Teacher downloaded student report";
+
+        if (action.includes("Guardian PIN"))
+            return "🔒 Guardian PIN verified";
+
+        if (action.includes("Assessment"))
+            return "🤖 AI Assessment completed";
+
+        return action;
+    };
+
     const verifyTeacherPin = async () => {
 
         try {
@@ -319,9 +341,17 @@ export default function TeacherDashboard() {
 
                         <div
                             key={index}
-                            className="bg-white/5 rounded-xl p-4"
+                            className="bg-white/5 hover:bg-white/10 transition-all rounded-xl p-4 flex justify-between items-center"
                         >
-                            {log.action}
+
+                            <span>
+                                {formatLog(log.action)}
+                            </span>
+
+                            <span className="text-gray-400 text-sm">
+                                {log.timestamp?.toDate?.().toLocaleString()}
+                            </span>
+
                         </div>
 
                     ))}
