@@ -1,7 +1,57 @@
+import {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AIScreening() {
     const navigate = useNavigate();
+    const [showResume, setShowResume] = useState(false);
+    const [savedProgress, setSavedProgress] =useState(null);
+
+        useEffect(() => {
+    const progress = localStorage.getItem("assessmentProgress");
+
+    if (progress) {
+        const parsed = JSON.parse(progress);
+
+        if (!parsed.completed) {
+            setSavedProgress(parsed);
+            setShowResume(true);
+        }
+    }
+}, []);
+
+    const handleResume = () => {
+
+    if (!savedProgress) return;
+
+    switch (savedProgress.step) {
+
+        case "voice":
+            navigate("/screening-voice");
+            break;
+
+        case "letter":
+            navigate("/screening-letter");
+            break;
+
+        case "word":
+            navigate("/screening-word");
+            break;
+
+        default:
+            navigate("/screening-voice");
+    }
+
+};
+
+const handleStartOver = () => {
+
+    localStorage.removeItem("assessmentProgress");
+
+    setShowResume(false);
+
+    navigate("/screening-voice");
+
+};
 
     return (
         <>
@@ -59,15 +109,53 @@ export default function AIScreening() {
                                 Estimated Time: 3-5 Minutes
                             </p>
                         </div>
-
-                        <button
-                            onClick={() => navigate("/screening-voice")}
-                            className="px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold text-lg"
-                        >
+<button
+    onClick={() => {
+        if (showResume) return;
+        navigate("/screening-voice");
+    }}
+    className="px-10 py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-pink-400 text-black font-bold text-lg"
+>
                             Start Assessment
                         </button>
 
                     </div>
+                    {showResume && (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+        <div className="bg-slate-900 rounded-3xl p-8 w-[450px] border border-cyan-500">
+
+            <h2 className="text-3xl font-bold mb-4">
+                Resume Assessment?
+            </h2>
+
+            <p className="text-gray-300 mb-6">
+                You have an unfinished assessment.
+                Would you like to continue where you left off?
+            </p>
+
+            <div className="flex gap-4">
+
+                <button
+                    onClick={handleResume}
+                    className="flex-1 py-3 rounded-xl bg-cyan-400 text-black font-bold"
+                >
+                    Continue
+                </button>
+
+                <button
+                    onClick={handleStartOver}
+                    className="flex-1 py-3 rounded-xl bg-red-500 font-bold"
+                >
+                    Start Over
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+)}
 
                 </div>
 

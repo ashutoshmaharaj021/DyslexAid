@@ -78,18 +78,31 @@ export default function Assessment() {
             (correct / originalWords.length) * 100
         );
     };
+const submitAssessment = () => {
 
-    const submitAssessment = () => {
+    const accuracy = calculateAccuracy();
 
-        const accuracy = calculateAccuracy();
+    // Existing code
+    localStorage.setItem(
+        "voiceScore",
+        accuracy
+    );
 
-        localStorage.setItem(
-            "voiceScore",
-            accuracy
-        );
+    // New assessment progress object
+    localStorage.setItem(
+        "assessmentProgress",
+        JSON.stringify({
+            step: "letter",
+            voiceScore: accuracy,
+            letterScore: 0,
+            wordScore: 0,
+            currentQuestion: 0,
+            completed: false
+        })
+    );
 
-        navigate("/screening-letter");
-    };
+    navigate("/screening-letter");
+};
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white p-8">

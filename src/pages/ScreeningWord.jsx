@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -8,6 +8,17 @@ export default function ScreeningWord() {
 
     const [score, setScore] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(0);
+
+    useEffect(() => {
+    const progress = JSON.parse(
+        localStorage.getItem("assessmentProgress")
+    );
+
+    if (progress && progress.step === "word") {
+        setCurrentQuestion(progress.currentQuestion);
+        setScore(progress.wordScore);
+    }
+}, []);
 
     const questions = [
         {
@@ -53,12 +64,45 @@ export default function ScreeningWord() {
         }
 
         if (currentQuestion < questions.length - 1) {
-            setCurrentQuestion((prev) => prev + 1);
-        } else {
+
+    const progress = JSON.parse(
+        localStorage.getItem("assessmentProgress")
+    );
+
+    if (progress) {
+
+        progress.step = "word";
+        progress.wordScore = finalScore;
+        progress.currentQuestion = currentQuestion + 1;
+
+        localStorage.setItem(
+            "assessmentProgress",
+            JSON.stringify(progress)
+        );
+    }
+
+    setCurrentQuestion((prev) => prev + 1);
+
+} else {
             localStorage.setItem(
                 "wordScore",
                 finalScore
             );
+            const progress = JSON.parse(
+    localStorage.getItem("assessmentProgress")
+);
+
+if (progress) {
+
+    progress.completed = true;
+    progress.wordScore = finalScore;
+
+    localStorage.setItem(
+        "assessmentProgress",
+        JSON.stringify(progress)
+    );
+
+}
 
             const voiceScore =
                 Number(localStorage.getItem("voiceScore")) || 0;

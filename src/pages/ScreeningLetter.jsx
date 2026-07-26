@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -7,6 +7,23 @@ export default function ScreeningLetter() {
 
     const [score, setScore] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(0);
+
+    useEffect(() =>
+    {
+        const progress = JSON.parse
+        (
+            localStorage.getItem("assessmentProgress")
+        );
+        if
+        (
+            progress &&
+            progress.step === "letter"
+        ) 
+        {
+            setCurrentQuestion(progress.currentQuestion);
+            setScore(progress.letterScore);
+        }   
+    }, []);
 
     const questions = [
         {
@@ -57,6 +74,33 @@ export default function ScreeningLetter() {
         } else {
             toast.error("Wrong ❌");
         }
+
+        const progress = JSON.parse(
+    localStorage.getItem("assessmentProgress")
+);
+
+if (progress) {
+
+    progress.letterScore = finalScore;
+
+    if (currentQuestion < questions.length - 1) {
+
+        progress.step = "letter";
+        progress.currentQuestion = currentQuestion + 1;
+
+    } else {
+
+        progress.step = "word";
+        progress.currentQuestion = 0;
+
+    }
+
+    localStorage.setItem(
+        "assessmentProgress",
+        JSON.stringify(progress)
+    );
+
+}
 
         if (currentQuestion < questions.length - 1) {
             setCurrentQuestion((prev) => prev + 1);
